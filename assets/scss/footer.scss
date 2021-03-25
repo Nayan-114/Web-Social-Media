@@ -1,19 +1,18 @@
-.bg-color
-{
-    background-color: #757475;
-    color: azure;
-    #footer-i
-    {
-        display: inline-block;
+#layout-footer{
+    color: white;
+    a{
+        color: white;
+        text-decoration: none;
     }
-    #footer-ii
-    {
-        display: flex;
-        justify-content: center;
-        a
-        {
-            text-decoration: none;
-            color: azure;
+
+    background: grey;
+    padding: 5px 10px;
+    display: flex;
+    justify-content: flex-start;
+
+    .footer-nav{
+        ul{
+            list-style: none;
         }
     }
 }
