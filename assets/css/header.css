@@ -1,0 +1,14 @@
+.height-f {
+  height: 30px;
+  width: 100%; }
+  .height-f #list-style {
+    margin-top: 15px;
+    text-align: justify;
+    align-items: center;
+    list-style: none;
+    display: flex;
+    justify-content: space-between; }
+    .height-f #list-style a {
+      text-align: justify;
+      color: azure;
+      text-decoration: none; }

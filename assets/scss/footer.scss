@@ -1,0 +1,19 @@
+.bg-color
+{
+    background-color: #757475;
+    color: azure;
+    #footer-i
+    {
+        display: inline-block;
+    }
+    #footer-ii
+    {
+        display: flex;
+        justify-content: center;
+        a
+        {
+            text-decoration: none;
+            color: azure;
+        }
+    }
+}
