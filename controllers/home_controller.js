@@ -1,4 +1,5 @@
 const Post = require('../models/post');
+
 module.exports.home = function(req,res)
 {
     console.log(req.cookies);
@@ -20,17 +21,17 @@ module.exports.home = function(req,res)
     
     // Previous method can  aloso be used
     // But As we need the name so we are populating the whole user object
-    Post.find({}).populate('user').exec(function(err,posts)
-    {
-        if(err)
+    Post.find({}).populate('user')
+    .populate({
+        path:'comments',
+        populate:
         {
-            console.log('Error finding the posts');
-            return;
+            path:'user'
         }
-        return res.render('home',
-        {
-            title:"Home",
-            posts:posts
+    }).exec(function(err, posts){
+        return res.render('home', {
+            title: "Codeial | Home",
+            posts:  posts
         });
     })
 }
