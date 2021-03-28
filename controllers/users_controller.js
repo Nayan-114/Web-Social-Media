@@ -1,10 +1,15 @@
 const User = require('../models/user');
 module.exports.profile = function(req,res)
 {
-    return res.render('user_profile',
+    User.findById(req.params.id,function(err,user)
     {
-        title:'profile'
+        return res.render('user_profile',
+        {
+            title:'User Profile',
+            profile_user:user
+        });
     });
+    
 }
 
 // render the sign up page
@@ -18,6 +23,22 @@ module.exports.signUp = function(req,res)
     {
         title:"Codeial | Sign Up"
     });
+}
+
+module.exports.update = function(req,res)
+{
+    if(req.user.id == req.params.id)
+    {
+        // Or --> User.findByIdAndUpdate(req.params.id,req.body) and same follows
+        User.findByIdAndUpdate(req.params.id,{name:req.body.name,email:req.body.email},function(err,user)
+        {
+            return res.redirect('back');
+        });
+    }
+    else{
+        // Http status codes like:404,200,etc
+        return res.status(401).send('Unathorized');
+    }
 }
 
 // render the sign in page
