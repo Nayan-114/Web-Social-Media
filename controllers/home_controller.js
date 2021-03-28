@@ -6,7 +6,7 @@ module.exports.home = async function(req,res)
 {
     console.log(req.cookies);
     res.cookie('user_id',25);
-    // without Async Await
+    // without Async Await remove async from above function
     
 //     Post.find({}).populate('user')
 //     .populate({
