@@ -1,4 +1,6 @@
 const User = require('../models/user');
+const fs = require('fs');
+const path = require('path');
 module.exports.profile = function(req,res)
 {
     User.findById(req.params.id,function(err,user)
@@ -25,20 +27,65 @@ module.exports.signUp = function(req,res)
     });
 }
 
-module.exports.update = function(req,res)
+// module.exports.update = function(req,res)
+// {
+//     if(req.user.id == req.params.id)
+//     {
+//         // Or --> User.findByIdAndUpdate(req.params.id,req.body) and same follows
+//         User.findByIdAndUpdate(req.params.id,{name:req.body.name,email:req.body.email},function(err,user)
+//         {
+//             return res.redirect('back');
+//         });
+//     }
+//     else{
+//         // Http status codes like:404,200,etc
+//         req.flash('error','Unauthorized!');
+//         return res.status(401).send('Unathorized');
+//     }
+// }
+
+module.exports.update =async function(req,res)
 {
     if(req.user.id == req.params.id)
     {
-        // Or --> User.findByIdAndUpdate(req.params.id,req.body) and same follows
-        User.findByIdAndUpdate(req.params.id,{name:req.body.name,email:req.body.email},function(err,user)
+        try 
         {
+            let user = await User.findById(req.params.id);
+            // We cannot directly get access using req.body because the par
+            // parser is not able to parse a 'multipart' form, multer  
+            // 'multer' is deployed for this reason
+            User.uploadedAvatar(req,res,function(err)
+            {
+                if(err)
+                {
+                    console.log('******** Multer Error: ',err);
+                    return;
+                }
+                user.name = req.body.name;
+                user.email = req.body.email;
+                // Here we are able to read 'body' only by using 'multer'
+                if(req.file)
+                {
+                    if(user.avatar)
+                    {
+                        fs.unlinkSync(path.join(__dirname,'..',user.avatar));
+                        // It is used to delete the previous avatar
+                    }
+                    // This is saving the path of the uploaded file into the avatar field in the user
+                    user.avatar = User.avatarPath + '/' + req.file.filename;
+                }    
+                user.save();
+                return res.redirect('back');
+            });
+        } catch (error) {
+            req.flash('error',error);
             return res.redirect('back');
-        });
-    }
-    else{
-        // Http status codes like:404,200,etc
+        }
+    }else
+    {
+        req.flash('error','Unauthorized!');
         return res.status(401).send('Unathorized');
-    }
+    }     
 }
 
 // render the sign in page
